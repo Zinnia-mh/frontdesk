@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 550px; padding-top: 55px">
+  <div style="height: 550px">
     <el-card style="width: 49.5%; height: 40%">
       <template v-slot:header>
         <div>

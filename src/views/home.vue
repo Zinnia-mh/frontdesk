@@ -1,11 +1,12 @@
 <template>
   <div class="home">
     <div class="home1">
-      <h1>红枣知识智能服务系统</h1>
+      <div class="home-title">
+        <h1>红枣知识智能服务系统</h1>
+      </div>
       <div class="search">
         <el-input
           v-model="input1"
-          style="max-width: 800px"
           size="large"
           placeholder="枣树病害"
           class="input-with-select"
@@ -16,7 +17,9 @@
         </el-input>
       </div>
       <div class="bestsellers-container">
-        <h3 style="color: #000">热词搜索：</h3>
+        <div class="hot-words">
+          <h3>热词搜索：</h3>
+        </div>
         <chart-word-cloud :options="state.chartOptions"></chart-word-cloud>
       </div>
       <div class="show">
@@ -185,6 +188,7 @@ const state = reactive({
 });
 </script>
 
+
 <style lang="less" scoped>
 html,
 body {
@@ -192,6 +196,7 @@ body {
 }
 .home1 {
   width: 100%;
+  height: calc(100vh - 50px);
   border-bottom: 2px solid hsl(0, 0%, 0%);
   display: flex;
   flex-direction: column;
@@ -200,10 +205,22 @@ body {
   background-image: url(../assets/images/home3.jpg);
   object-fit: scale-down;
 }
+
+.home-title {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.search {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 20px 20px 20px;
+}
 .el-input {
-  border: 2px solid #000;
-  width: 1500px;
-  margin: 50px 0 0 0;
+  width: 60%;
 }
 .input-with-select .el-input-group__prepend {
   background-color: var(--el-fill-color-blank);
@@ -211,13 +228,16 @@ body {
 .show {
   display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  padding: 20px;
 }
 .entity,
 .relation {
-  width: 250px;
+  width: 20%;
   height: 100px;
   background-color: #1166ee;
-  margin: 90px 30px 60px 30px;
   color: #fff;
   font-size: 25px;
   display: flex;
@@ -226,11 +246,10 @@ body {
   align-items: center;
 }
 h1 {
-  color: #3232df;
+  color: #1166ee;
   font-family: "等线";
   font-size: 60px;
   letter-spacing: 5px;
-  margin-top: 170px;
 }
 .home1 .el-icon {
   position: absolute;
@@ -300,8 +319,13 @@ footer div {
 }
 
 .bestsellers-container {
-  height: 120px;
-  width: 800px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  height: 20%;
+  width: 60%;
+  padding: 20px 10px;
   background: #e4e6db00;
   // border-radius:10%;
   #charts-content {
@@ -309,5 +333,14 @@ footer div {
     width: 100%;
     height: 100%;
   }
+}
+
+.hot-words {
+  color: #73767a;
+}
+
+/* 在CSS中定义移动端样式 */
+@media only screen and (max-width: 768px) {
+  /* 移动端样式 */
 }
 </style>

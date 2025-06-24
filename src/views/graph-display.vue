@@ -8,12 +8,12 @@
   <div class="view1" ref="card" style="width: 100%; text-align: center">
     <div
       id="graph"
-      style="height: 800px; width: 100%; text-align: center; padding-top: 50px"
+      style="height: 800px; width: 100%; text-align: center"
     ></div>
     <el-dialog v-model="dialogFormVisible" title="节点信息" width="500">
       <div class="box">
         <img
-        class="img"
+          class="img"
           :src="getImageUrl(form.name)"
           onload="this.style.display='block'"
           onerror="this.style.display='none'"
@@ -48,17 +48,17 @@
   <div id="graph2" style="height: 650px; width: 100%"></div>
 </template>
 <script setup>
-const value = ref(10);
-let nodesNum = ref(0);
-let relationNum = ref(0);
-import { onMounted, onUnmounted } from "@vue/runtime-core";
-import { ref } from "vue";
-import { BASE_URL } from "@/service/config";
-var dialogFormVisible = ref(false);
-const formLabelWidth = "140px";
-var form = {};
-import * as echarts from "echarts";
-import axios from "axios";
+const value = ref(10)
+let nodesNum = ref(0)
+let relationNum = ref(0)
+import { onMounted, onUnmounted } from "@vue/runtime-core"
+import { ref } from "vue"
+import { BASE_URL } from "@/service/config"
+var dialogFormVisible = ref(false)
+const formLabelWidth = "140px"
+var form = {}
+import * as echarts from "echarts"
+import axios from "axios"
 let category = {
   品种选择: 0,
   枣果加工: 1,
@@ -67,98 +67,98 @@ let category = {
   枣树种植基础知识: 4,
   枣树管理: 5,
   枣树育苗: 6,
-};
-const url = BASE_URL + "getJsonData";
-let params = { name: "" };
-let data = [];
-let links = [];
-let data2=[];
-import { useHomeStore } from "@/stores/main";
-const homestore = useHomeStore();
-var myChart;
-var myChart2;
-const url2 = BASE_URL + "getNodesNum";
+}
+const url = BASE_URL + "getJsonData"
+let params = { name: "" }
+let data = []
+let links = []
+let data2 = []
+import { useHomeStore } from "@/stores/main"
+const homestore = useHomeStore()
+var myChart
+var myChart2
+const url2 = BASE_URL + "getNodesNum"
 const getImageUrl = (name) => {
-  return new URL(`../assets/images/枣图片/${name}.jpg`, import.meta.url).href;
-};
+  return new URL(`../assets/images/枣图片/${name}.jpg`, import.meta.url).href
+}
 
 onMounted(() => {
   // echarts 数据
   // 基于准备好的dom，初始化echarts实例
-  myChart = echarts.init(document.getElementById("graph"));
+  myChart = echarts.init(document.getElementById("graph"))
   myChart.on("click", { dataType: "node" }, function (node) {
-    form = node.data;
-    delete form.draggable;
-    delete form.category;
-    delete form.id;
-    dialogFormVisible.value = true;
-  });
+    form = node.data
+    delete form.draggable
+    delete form.category
+    delete form.id
+    dialogFormVisible.value = true
+  })
 
   if (homestore.entireData.length === 0) {
     axios.request(url, { params }).then((res) => {
-      let id = 0;
-      let maxDisPlayNode = (value.value / 100) * 4250;
-      homestore.entireData = res.data;
+      let id = 0
+      let maxDisPlayNode = (value.value / 100) * 4250
+      homestore.entireData = res.data
       for (let i = 0; id < maxDisPlayNode && i < res.data.length; i++) {
         // 获取node1
-        let node1 = {};
-        node1["name"] = res.data[i]["n1"]["name"];
-        let flag = 1;
+        let node1 = {}
+        node1["name"] = res.data[i]["n1"]["name"]
+        let flag = 1
         //node1的1id
-        let relationTarget = id.toString();
+        let relationTarget = id.toString()
         //看node1是否已加入data中，已经加入的话就不再加入
         for (let j = 0; j < data.length; j++) {
           if (data[j]["name"] === node1["name"]) {
-            flag = 0;
-            relationTarget = data[j]["id"];
-            break;
+            flag = 0
+            relationTarget = data[j]["id"]
+            break
           }
         }
-        node1["id"] = relationTarget;
+        node1["id"] = relationTarget
         if (flag === 1) {
-          node1["draggable"] = true;
-          node1["category"] = category[res.data[i]["labels(n1)"]];
+          node1["draggable"] = true
+          node1["category"] = category[res.data[i]["labels(n1)"]]
 
           for (let index in res.data[i].n1) {
-            node1[index] = res.data[i].n1[index];
+            node1[index] = res.data[i].n1[index]
           }
 
-          id++;
-          data.push(node1);
+          id++
+          data.push(node1)
         }
 
         // 获取node2
-        let node2 = {};
-        node2["name"] = res.data[i]["n2"]["name"];
-        flag = 1;
-        relationTarget = id.toString();
+        let node2 = {}
+        node2["name"] = res.data[i]["n2"]["name"]
+        flag = 1
+        relationTarget = id.toString()
         for (let l = 0; l < data.length; l++) {
           if (data[l]["name"] === node2["name"]) {
-            flag = 0;
-            relationTarget = data[l]["id"];
-            break;
+            flag = 0
+            relationTarget = data[l]["id"]
+            break
           }
         }
-        node2["id"] = relationTarget;
+        node2["id"] = relationTarget
         if (flag === 1) {
-          node2["draggable"] = true;
-          node2["category"] = category[res.data[i]["labels(n2)"]];
+          node2["draggable"] = true
+          node2["category"] = category[res.data[i]["labels(n2)"]]
           for (let index in res.data[i].n2) {
-            node2[index] = res.data[i].n2[index];
+            node2[index] = res.data[i].n2[index]
           }
-          id++;
-          data.push(node2);
+          id++
+          data.push(node2)
         }
         // 获取relation
-        let relation = {};
-        relation["source"] = node1["id"];
-        relation["target"] = node2["id"];
-        relation["category"] = 0;
-        relation["value"] = res.data[i]["rel"]["name"];
-        relation["symbolSize"] = 10;
-        links.push(relation);
-        nodesNum.value = data.length;
-        relationNum.value = links.length;
+        let relation = {}
+        relation["source"] = node1["id"]
+        relation["target"] = node2["id"]
+        relation["category"] = 0
+        relation["value"] = res.data[i]["rel"]["name"]
+        relation["symbolSize"] = 10
+        links.push(relation)
+        nodesNum.value = data.length
+        relationNum.value = links.length
       }
       let option = {
         tooltip: {},
@@ -265,94 +265,94 @@ onMounted(() => {
             },
           },
         ],
-      };
+      }
       // 使用刚指定的配置项和数据显示图表。
-      myChart.setOption(option);
-    });
+      myChart.setOption(option)
+    })
   } else {
-    nodesNum.value = homestore.nodeNum;
-    relationNum.value = homestore.relationNum;
-    let id = 0;
-    let maxDisPlayNode = (value.value / 100) * 4250;
+    nodesNum.value = homestore.nodeNum
+    relationNum.value = homestore.relationNum
+    let id = 0
+    let maxDisPlayNode = (value.value / 100) * 4250
     for (
       let i = 0;
       id < maxDisPlayNode && i < homestore.entireData.length;
       i++
     ) {
       // 获取node1
-      let node1 = {};
-      node1["name"] = homestore.entireData[i]["n1"]["name"];
-      let flag = 1;
+      let node1 = {}
+      node1["name"] = homestore.entireData[i]["n1"]["name"]
+      let flag = 1
       //node1的1id
-      let relationTarget = id.toString();
+      let relationTarget = id.toString()
       //看node1是否已加入data中，已经加入的话就不再加入
       for (let j = 0; j < data.length; j++) {
         if (data[j]["name"] === node1["name"]) {
-          flag = 0;
-          relationTarget = data[j]["id"];
-          break;
+          flag = 0
+          relationTarget = data[j]["id"]
+          break
         }
       }
-      node1["id"] = relationTarget;
+      node1["id"] = relationTarget
       if (flag === 1) {
-        node1["draggable"] = true;
-        node1["category"] = category[homestore.entireData[i]["labels(n1)"]];
+        node1["draggable"] = true
+        node1["category"] = category[homestore.entireData[i]["labels(n1)"]]
 
         for (let index in homestore.entireData[i].n1) {
-          node1[index] = homestore.entireData[i].n1[index];
+          node1[index] = homestore.entireData[i].n1[index]
         }
 
-        id++;
-        data.push(node1);
+        id++
+        data.push(node1)
       }
 
       // 获取node2
-      let node2 = {};
-      node2["name"] = homestore.entireData[i]["n2"]["name"];
-      flag = 1;
-      relationTarget = id.toString();
+      let node2 = {}
+      node2["name"] = homestore.entireData[i]["n2"]["name"]
+      flag = 1
+      relationTarget = id.toString()
       for (let l = 0; l < data.length; l++) {
         if (data[l]["name"] === node2["name"]) {
-          flag = 0;
-          relationTarget = data[l]["id"];
-          break;
+          flag = 0
+          relationTarget = data[l]["id"]
+          break
         }
       }
-      node2["id"] = relationTarget;
+      node2["id"] = relationTarget
       if (flag === 1) {
-        node2["draggable"] = true;
-        node2["category"] = category[homestore.entireData[i]["labels(n2)"]];
+        node2["draggable"] = true
+        node2["category"] = category[homestore.entireData[i]["labels(n2)"]]
         for (let index in homestore.entireData[i].n2) {
-          node2[index] = homestore.entireData[i].n2[index];
+          node2[index] = homestore.entireData[i].n2[index]
         }
-        id++;
-        data.push(node2);
+        id++
+        data.push(node2)
       }
       // 获取relation
-      let relation = {};
-      relation["source"] = node1["id"];
-      relation["target"] = node2["id"];
-      relation["category"] = 0;
-      flag = 1;
+      let relation = {}
+      relation["source"] = node1["id"]
+      relation["target"] = node2["id"]
+      relation["category"] = 0
+      flag = 1
       for (let k = 0; k < links.length; k++) {
         if (
           links[k]["source"] === relation["source"] &&
           links[k]["target"] === relation["target"]
         ) {
           links[k]["value"] =
-            links[k]["value"] + homestore.entireData[i]["rel"]["name"];
-          flag = 0;
-          break;
+            links[k]["value"] + homestore.entireData[i]["rel"]["name"]
+          flag = 0
+          break
         }
       }
       if (flag === 1) {
-        relation["value"] = homestore.entireData[i]["rel"]["name"];
-        relation["symbolSize"] = 10;
-        links.push(relation);
+        relation["value"] = homestore.entireData[i]["rel"]["name"]
+        relation["symbolSize"] = 10
+        links.push(relation)
       }
     }
-    nodesNum.value = data.length;
-    relationNum.value = links.length;
+    nodesNum.value = data.length
+    relationNum.value = links.length
     let option = {
       tooltip: {},
       legend: {
@@ -458,27 +458,27 @@ onMounted(() => {
           },
         },
       ],
-    };
+    }
     // 使用刚指定的配置项和数据显示图表。
-    myChart.setOption(option);
+    myChart.setOption(option)
   }
 
-  var chartDom = document.getElementById("graph2");
-  myChart2 = echarts.init(chartDom);
-  var option2;
+  var chartDom = document.getElementById("graph2")
+  myChart2 = echarts.init(chartDom)
+  var option2
   if (homestore.nodesNum.length === 0) {
     axios.request(url2).then((res) => {
       for (let i = 0; i < res.data.length; i++) {
-        homestore.sumEntity += res.data[i]["count(n)"];
+        homestore.sumEntity += res.data[i]["count(n)"]
         if (res.data[i]["labels(n)"].length > 0) {
           let tmp = {
             name: res.data[i]["labels(n)"][0],
             value: res.data[i]["count(n)"],
-          };
-          data2.push(tmp);
+          }
+          data2.push(tmp)
         }
       }
-      homestore.nodesNum = data2;
+      homestore.nodesNum = data2
       option2 = {
         title: {
           text: "不同标签的节点数统计",
@@ -506,11 +506,11 @@ onMounted(() => {
             },
           },
         ],
-      };
-      option2 && myChart2.setOption(option2);
-    });
+      }
+      option2 && myChart2.setOption(option2)
+    })
   } else {
-    myChart2 = echarts.init(chartDom);
+    myChart2 = echarts.init(chartDom)
     let option2 = {
       title: {
         text: "不同标签的节点数统计",
@@ -538,98 +538,98 @@ onMounted(() => {
           },
         },
       ],
-    };
-    myChart2.setOption(option2);
+    }
+    myChart2.setOption(option2)
   }
-});
+})
 
 onUnmounted(() => {
-  myChart.dispose();
-  myChart2.dispose();
-});
-function changeValue() {
-  let data = [];
-  let links = [];
+  myChart.dispose()
+  myChart2.dispose()
+})
+function changeValue () {
+  let data = []
+  let links = []
   // echarts 数据
   // 基于准备好的dom，初始化echarts实例
-  let myChart = echarts.init(document.getElementById("graph"));
-  let id = 0;
-  let maxDisPlayNode = (value.value / 100) * 4250;
+  let myChart = echarts.init(document.getElementById("graph"))
+  let id = 0
+  let maxDisPlayNode = (value.value / 100) * 4250
   for (let i = 0; id < maxDisPlayNode && i < homestore.entireData.length; i++) {
     // 获取node1
-    let node1 = {};
-    node1["name"] = homestore.entireData[i]["n1"]["name"];
-    let flag = 1;
+    let node1 = {}
+    node1["name"] = homestore.entireData[i]["n1"]["name"]
+    let flag = 1
     //node1的1id
-    let relationTarget = id.toString();
+    let relationTarget = id.toString()
     //看node1是否已加入data中，已经加入的话就不再加入
     for (let j = 0; j < data.length; j++) {
       if (data[j]["name"] === node1["name"]) {
-        flag = 0;
-        relationTarget = data[j]["id"];
-        break;
+        flag = 0
+        relationTarget = data[j]["id"]
+        break
       }
     }
-    node1["id"] = relationTarget;
+    node1["id"] = relationTarget
     if (flag === 1) {
-      node1["draggable"] = true;
-      node1["category"] = category[homestore.entireData[i]["labels(n1)"]];
+      node1["draggable"] = true
+      node1["category"] = category[homestore.entireData[i]["labels(n1)"]]
 
       for (let index in homestore.entireData[i].n1) {
-        node1[index] = homestore.entireData[i].n1[index];
+        node1[index] = homestore.entireData[i].n1[index]
       }
 
-      id++;
-      data.push(node1);
+      id++
+      data.push(node1)
     }
 
     // 获取node2
-    let node2 = {};
-    node2["name"] = homestore.entireData[i]["n2"]["name"];
-    flag = 1;
-    relationTarget = id.toString();
+    let node2 = {}
+    node2["name"] = homestore.entireData[i]["n2"]["name"]
+    flag = 1
+    relationTarget = id.toString()
     for (let l = 0; l < data.length; l++) {
       if (data[l]["name"] === node2["name"]) {
-        flag = 0;
-        relationTarget = data[l]["id"];
-        break;
+        flag = 0
+        relationTarget = data[l]["id"]
+        break
       }
     }
-    node2["id"] = relationTarget;
+    node2["id"] = relationTarget
     if (flag === 1) {
-      node2["draggable"] = true;
-      node2["category"] = category[homestore.entireData[i]["labels(n2)"]];
+      node2["draggable"] = true
+      node2["category"] = category[homestore.entireData[i]["labels(n2)"]]
       for (let index in homestore.entireData[i].n2) {
-        node2[index] = homestore.entireData[i].n2[index];
+        node2[index] = homestore.entireData[i].n2[index]
       }
-      id++;
-      data.push(node2);
+      id++
+      data.push(node2)
     }
     // 获取relation
-    let relation = {};
-    relation["source"] = node1["id"];
-    relation["target"] = node2["id"];
-    relation["category"] = 0;
-    flag = 1;
+    let relation = {}
+    relation["source"] = node1["id"]
+    relation["target"] = node2["id"]
+    relation["category"] = 0
+    flag = 1
     for (let k = 0; k < links.length; k++) {
       if (
         links[k]["source"] === relation["source"] &&
         links[k]["target"] === relation["target"]
       ) {
         links[k]["value"] =
-          links[k]["value"] + homestore.entireData[i]["rel"]["name"];
-        flag = 0;
-        break;
+          links[k]["value"] + homestore.entireData[i]["rel"]["name"]
+        flag = 0
+        break
       }
     }
     if (flag === 1) {
-      relation["value"] = homestore.entireData[i]["rel"]["name"];
-      relation["symbolSize"] = 10;
-      links.push(relation);
+      relation["value"] = homestore.entireData[i]["rel"]["name"]
+      relation["symbolSize"] = 10
+      links.push(relation)
     }
   }
-  nodesNum.value = data.length;
-  relationNum.value = links.length;
+  nodesNum.value = data.length
+  relationNum.value = links.length
   let option = {
     tooltip: {},
     legend: {
@@ -735,8 +735,8 @@ function changeValue() {
         },
       },
     ],
-  };
-  myChart.setOption(option);
+  }
+  myChart.setOption(option)
 }
 </script>
 

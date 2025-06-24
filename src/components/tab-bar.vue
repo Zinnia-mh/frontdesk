@@ -54,11 +54,11 @@
     >
       <el-icon><Search /></el-icon>智能问答
     </div>
-    <div class="tab-bar-item">
+    <!-- <div class="tab-bar-item">
       <a href="http://8.130.127.77/" target="_blank"
         ><el-icon><Menu /></el-icon>后台文献管理</a
       >
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -83,7 +83,6 @@ body {
   height: 50px;
   width: 100%;
   background-color: rgba(6, 65, 128, 0.954);
-  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -118,5 +117,62 @@ a {
   border: 1px solid #000;
   color: rgb(246, 247, 245);
   font-weight: bold;
+}
+
+/* 在CSS中定义移动端样式 */
+/* 移动端样式 */
+@media only screen and (max-width: 768px) {
+  .tab-bar {
+    height: 60px; /* 稍微高一点方便点击 */
+    padding-bottom: env(
+      safe-area-inset-bottom
+    ); /* 适配iPhoneX等有底部安全区域的设备 */
+
+    .tab-bar-item {
+      font-size: 10px;
+      padding: 0 2px;
+
+      .el-icon {
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+/* 超小屏幕设备 */
+@media only screen and (max-width: 480px) {
+  .tab-bar {
+    .tab-text {
+      display: none; /* 在非常小的屏幕上只显示图标 */
+    }
+
+    .tab-bar-item {
+      .el-icon {
+        font-size: 22px; /* 增大图标大小 */
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+/* 横屏模式 */
+@media screen and (orientation: landscape) and (max-width: 768px) {
+  .tab-bar {
+    height: 50px;
+
+    .tab-bar-item {
+      flex-direction: row;
+
+      .el-icon {
+        margin-bottom: 0;
+        margin-right: 5px;
+        font-size: 16px;
+      }
+
+      .tab-text {
+        display: inline;
+      }
+    }
+  }
 }
 </style>
