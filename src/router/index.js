@@ -28,14 +28,14 @@ const router = createRouter({
       path: "/question",
       component: () => import("@/views/Question.vue")
     },
-    {
-      path: "/ner",
-      component: () => import("@/views/Ner.vue")
-    },
-    {
-      path: "/graphcompletion",
-      component: () => import("@/views/graph-completion.vue")
-    },
+    // {
+    //   path: "/ner",
+    //   component: () => import("@/views/Ner.vue")
+    // },
+    // {
+    //   path: "/graphcompletion",
+    //   component: () => import("@/views/graph-completion.vue")
+    // },
   ]
 })
 
