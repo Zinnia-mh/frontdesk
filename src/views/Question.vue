@@ -1,6 +1,6 @@
 <template>
-  <div style="height: 550px; padding-top: 55px">
-    <el-card style="width: 49.5%; height: 40%">
+  <div class="question-container">
+    <el-card class="card-container">
       <template v-slot:header>
         <div>
           <span>输入问题：</span>
@@ -37,7 +37,7 @@
         </el-form>
       </div>
     </el-card>
-    <el-card style="width: 49.5%; height: 71%; margin-top: 0.5%">
+    <el-card class="list-container">
       <div>
         <el-table
           :data="tableData"
@@ -50,18 +50,8 @@
         </el-table>
       </div>
     </el-card>
-    <div
-      ref="card"
-      id="card"
-      style="
-        width: 50%;
-        height: 100%;
-        position: relative;
-        left: 49.8%;
-        top: -112.2%;
-      "
-    >
-      <el-card style="height: 112.2%">
+    <div ref="card" id="card" class="graph-container">
+      <el-card style="height: 100%">
         <template v-slot:header>
           <div id="header" ref="header">
             <span>关系图</span>
@@ -416,5 +406,151 @@ a {
 }
 .el-card {
   background-color: #8dbdd861;
+}
+
+.question-container {
+  height: calc(100vh - 50px);
+}
+
+.card-container {
+  width: 49.5%;
+  height: 40%;
+}
+
+.list-container {
+  width: 49.5%;
+  height: 71%;
+  margin-top: 0.5%;
+}
+
+.graph-container {
+  width: 50%;
+  height: 100%;
+  position: relative;
+  left: 49.8%;
+  top: -112.2%;
+}
+
+/* 移动端布局 - 关系图放在最下面 */
+@media only screen and (max-width: 768px) {
+  p,
+  a,
+  span {
+    color: #3f6630;
+  }
+  .question-container {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+    background-color: #f2f9f0;
+  }
+
+  /* 搜索条件保持在顶部 */
+  .card-container {
+    width: 100% !important;
+    height: auto;
+    order: 1; /* 第一个元素 */
+    background-color: #ecf3eb;
+  }
+
+  /* 关系列表放在中间 */
+  .list-container {
+    width: 100% !important;
+    position: static;
+    height: auto;
+    order: 2; /* 第二个元素 */
+    background-color: #ecf3eb;
+    margin: 12px 0;
+  }
+
+  .el-card {
+    background-color: #ecf3eb;
+  }
+
+  /* 关系图放在最下面 */
+  .graph-container {
+    width: 100% !important;
+    position: static;
+    height: 50vh;
+    order: 3; /* 第三个元素 */
+    background-color: #ecf3eb;
+  }
+
+  /* 调整图表容器高度 */
+  #graph {
+    height: 100% !important;
+    width: 100% !important;
+  }
+
+  /* 调整表单元素在移动端的宽度 */
+  .el-form-item {
+    width: 100% !important;
+    margin-right: 0;
+  }
+
+  .el-select {
+    width: 100% !important;
+  }
+
+  /* 调整选择框和输入框在移动端的布局 */
+  .el-form--inline .el-form-item {
+    display: block;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  /* 调整按钮位置 */
+  .el-form-item:last-child {
+    text-align: center;
+  }
+
+  /* ========== 查询按钮专项优化 ========== */
+  /* 按钮容器（最后一个表单项） */
+  .el-form-item:last-child {
+    button {
+      width: 100%;
+      background: linear-gradient(135deg, #5a8f3d 0%, #3f6630 100%);
+      color: #fff;
+    }
+    text-align: center;
+    margin-top: 12px; /* 与上方表单项拉开距离 */
+  }
+
+  /*  primary 按钮核心样式 */
+  .el-button--primary {
+    /* 基础形态 */
+    padding: 10px 28px; /* 更大点击区域，适配移动端触摸 */
+    font-size: 14px; /* 字体清晰 */
+    border-radius: 8px; /* 圆润质感 */
+    border: none; /* 去掉默认边框，用背景渐变增强层次 */
+    background: linear-gradient(
+      135deg,
+      #67c23a 0%,
+      #409eff 100%
+    ); /* 渐变背景，贴合系统绿色系+品牌色 */
+    color: #fff; /* 白色文字更醒目 */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* 丝滑过渡 */
+
+    /* 触摸/hover 反馈 */
+    &:hover,
+    &:active {
+      transform: scale(1.03); /* 轻微放大，模拟物理按钮按下 */
+      background: linear-gradient(
+        135deg,
+        #5daf32 0%,
+        #3a8ee6 100%
+      ); /* 加深渐变，强化交互 */
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* 阴影增强层次感 */
+    }
+
+    /* 禁用态（如果有） */
+    &.is-disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      background: #ccc;
+    }
+  }
 }
 </style>
